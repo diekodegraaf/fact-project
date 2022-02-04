@@ -49,8 +49,10 @@ def main():
                         continue
                     if sub_name in sub_io_streams:
                         sentences = preprocess(content)
+                        file = open('subs/' + f'{sub_name}.txt', 'a')
                         for sent in sentences:
-                            print(sent, file=sub_io_streams[sub_name])
+                            nsent = sent + '\n'
+                            file.write(nsent)
         except FileNotFoundError:
             print(f'{reddit_bz2_file} is not found.')
             continue

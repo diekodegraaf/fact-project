@@ -148,7 +148,7 @@ class ReliabilityEstimator:
                              selected_target_words: List[str] = None,
                              selected_gender_base_pairs: List[Tuple[str]] = None):
         # Indexing bias scores and build dict
-        internal_consistency_dict = {'gender base pairs': {}, 'target words': {}}  # Cronbach's alpha
+        internal_consistency_dict = {'base pairs': {}, 'target words': {}}  # Cronbach's alpha
         bias_scores, target_words, gender_base_pairs = self.retrieve_bias_scores_of_selected_words(
             selected_target_words=selected_target_words, selected_gender_base_pairs=selected_gender_base_pairs)
         bias_scores = np.mean(bias_scores, axis=-1)  # n_bias_measures, n_target_words, n_gbps
@@ -156,6 +156,5 @@ class ReliabilityEstimator:
         for bias_measure_idx, bias_measure in enumerate(self.bias_measures):
             bias_scores_of_measure = bias_scores[bias_measure_idx]  # n_target_words, n_gbps
             internal_consistency_dict['target words'][bias_measure] = cronbachs_alpha(bias_scores_of_measure)
-            internal_consistency_dict['gender base pairs'][bias_measure] = cronbachs_alpha(bias_scores_of_measure.T)
+            internal_consistency_dict['base pairs'][bias_measure] = cronbachs_alpha(bias_scores_of_measure.T)
         return internal_consistency_dict
-

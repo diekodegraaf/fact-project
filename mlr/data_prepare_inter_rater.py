@@ -4,8 +4,6 @@ import pandas as pd
 # %% paths to the pkl files storing the reliability scores
 path_ls = ['../data/results/reliability/reddit/askhistorians/glove.pkl',
            '../data/results/reliability/reddit/askhistorians/sgns.pkl',
-           '../data/results/reliability/reddit/askscience/glove.pkl',
-           '../data/results/reliability/reddit/askscience/sgns.pkl',
            '../data/results/reliability/wikitext-103/glove.pkl',
            '../data/results/reliability/wikitext-103/sgns.pkl']
 
@@ -27,9 +25,6 @@ for path in path_ls:
     if 'askhistorians' in path:
         data_long['corpus'] = 'askhistorians'
 
-    elif 'askscience' in path:
-        data_long['corpus'] = 'askscience'
-
     else:
         data_long['corpus'] = 'wikitext'
 
@@ -40,7 +35,6 @@ inter_metric_df
 
 # %%
 path_ls = ['../data/results/property/reddit_ask_historians.csv',
-           '../data/results/property/reddit_ask_science.csv',
            '../data/results/property/wikitext.csv']
 
 feature_df = pd.DataFrame()
@@ -50,9 +44,6 @@ for path in path_ls:
 
     if 'historians' in path:
         data['corpus'] = 'askhistorians'
-
-    elif 'science' in path:
-        data['corpus'] = 'askscience'
 
     else:
         data['corpus'] = 'wikitext'

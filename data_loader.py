@@ -1,7 +1,7 @@
 from typing import Dict
 import string
 import os
-
+import io
 import numpy as np
 
 import paths
@@ -19,6 +19,10 @@ def load_pnas_18_gbp():
 
 def load_gbp():
     return list(set(load_pnas_18_gbp() + load_nips_16_gbp()))
+
+
+def load_sbp():
+    return [(a.lower(), b.lower()) for (a, b) in utils.load_json(paths.custom_sbp_path)]
 
 
 def load_nips16_professions():
@@ -53,7 +57,7 @@ def load_gensim_sgns(embed_path) -> Dict[str, np.array]:
 
     artificial_tokens = ['<unk>', '<raw_unk>']
     embed_model = Word2Vec.load(embed_path).wv
-    embed_model = {word: embed_model[word] for word in embed_model.vocab if word not in artificial_tokens}
+    embed_model = {word: embed_model[word] for word in embed_model.key_to_index if word not in artificial_tokens}
     return embed_model
 
 
@@ -138,7 +142,7 @@ def load_word_frequency_dict(filename):
 
 def load_vocab(filename):
     vocab = []
-    with open(filename) as fin:
+    with io.open(filename, encoding="utf-8") as fin:
         for line in fin:
             try:
                 word, _ = line.strip().split()

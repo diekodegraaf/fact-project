@@ -5,8 +5,6 @@ import statsmodels.api as sm
 # %% paths to the pkl files storing the reliability scores
 path_ls = ['../data/results/reliability/reddit/askhistorians/glove.pkl',
            '../data/results/reliability/reddit/askhistorians/sgns.pkl',
-           '../data/results/reliability/reddit/askscience/glove.pkl',
-           '../data/results/reliability/reddit/askscience/sgns.pkl',
            '../data/results/reliability/wikitext-103/glove.pkl',
            '../data/results/reliability/wikitext-103/sgns.pkl']
 
@@ -33,9 +31,6 @@ for path in path_ls:
     if 'askhistorians' in path:
         data_long['corpus'] = 'askhistorians'
 
-    elif 'askscience' in path:
-        data_long['corpus'] = 'askscience'
-
     else:
         data_long['corpus'] = 'wikitext'
 
@@ -44,7 +39,6 @@ for path in path_ls:
 
 # %% paths to the csv files storing the word property data
 path_ls = ['../data/results/property/reddit_ask_historians.csv',
-           '../data/results/property/reddit_ask_science.csv',
            '../data/results/property/wikitext.csv']
 
 # %% create a data frame to store the word property data across the data sets
@@ -55,9 +49,6 @@ for path in path_ls:
 
     if 'historians' in path:
         data['corpus'] = 'askhistorians'
-
-    elif 'science' in path:
-        data['corpus'] = 'askscience'
 
     else:
         data['corpus'] = 'wikitext'

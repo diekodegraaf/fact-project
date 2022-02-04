@@ -38,8 +38,9 @@ First clone the repository from GitHub and compile
 git clone https://github.com/stanfordnlp/glove
 cd glove && make
 ```
-Then make your own script to train with different corpora, 
-and save the embeddings of WikiText-103, r/AskScience, and r/AskHistorians 
+Move ```gloveW.sh``` to the ```glove``` folder. 
+Use a vector size of 300 and run it to train 32 different models.
+Save the embeddings of WikiText-103, r/AskScience, and r/AskHistorians 
 at ```EMBEDDING_FOLDER/glove```. 
 For ```EMBEDDING_FOLDER``` see ```embed_folders``` in ```paths.py```. 
 
@@ -49,12 +50,22 @@ After training word embeddings,
 we calculate gender bias scores of words regarding each word embedding model.
 ```shell
 %SGNS
-python calc_bias_scores.py --embed_folder data/embed/wikitext-103 --vocab_path data/embed/wikitext-103/vocab.txt --embed_type sgns --bias_score_path data/results/bias_scores/wikitext-103/sgns.pkl
-python calc_bias_scores.py --embed_folder data/embed/wikitext-103 --vocab_path data/embed/wikitext-103/vocab.txt --embed_type glove --bias_score_path data/results/bias_scores/wikitext-103/glove.pkl
-python calc_bias_scores.py --embed_folder data/embed/reddit/askscience --vocab_path data/embed/reddit/askscience/vocab.txt --embed_type sgns --bias_score_path data/results/bias_scores/reddit/askscience/sgns.pkl
-python calc_bias_scores.py --embed_folder data/embed/reddit/askscience --vocab_path data/embed/reddit/askscience/vocab.txt --embed_type glove --bias_score_path data/results/bias_scores/reddit/askscience/sgns.pkl
-python calc_bias_scores.py --embed_folder data/embed/reddit/askhistorians --vocab_path data/embed/reddit/askhistorians/vocab.txt --embed_type sgns --bias_score_path data/results/bias_scores/reddit/askhistorians/sgns.pkl
-python calc_bias_scores.py --embed_folder data/embed/reddit/askhistorians --vocab_path data/embed/reddit/askhistorians/vocab.txt --embed_type glove --bias_score_path data/results/bias_scores/reddit/askhistorians/glove.pkl
+python calc_bias_scores.py --embed_folder data/embed/wikitext-103/sgns --vocab_path data/embed/wikitext-103/vocab.txt --embed_type sgns --base_pair_type gender --bias_score_path data/results/bias_scores/wikitext-103/sgns.pkl 
+python calc_bias_scores.py --embed_folder data/embed/wikitext-103/glove --vocab_path data/embed/wikitext-103/vocab.txt --embed_type glove --base_pair_type gender --bias_score_path data/results/bias_scores/wikitext-103/glove.pkl
+python calc_bias_scores.py --embed_folder data/embed/reddit/askscience/sgns --vocab_path data/embed/reddit/askscience/vocab.txt --embed_type sgns --base_pair_type gender --bias_score_path data/results/bias_scores/reddit/askscience/sgns.pkl
+python calc_bias_scores.py --embed_folder data/embed/reddit/askscience/glove --vocab_path data/embed/reddit/askscience/vocab.txt --embed_type glove --base_pair_type gender --bias_score_path data/results/bias_scores/reddit/askscience/glove.pkl
+python calc_bias_scores.py --embed_folder data/embed/reddit/askhistorians/sgns --vocab_path data/embed/reddit/askhistorians/vocab.txt --embed_type sgns --base_pair_type gender --bias_score_path data/results/bias_scores/reddit/askhistorians/sgns.pkl
+python calc_bias_scores.py --embed_folder data/embed/reddit/askhistorians/glove --vocab_path data/embed/reddit/askhistorians/vocab.txt --embed_type glove --base_pair_type gender --bias_score_path data/results/bias_scores/reddit/askhistorians/glove.pkl
+```
+Optionally calculate scores for sexual orientation scores of words regarding each word embedding model.
+
+```shell
+python calc_bias_scores.py --embed_folder data/embed/wikitext-103/sgns --vocab_path data/embed/wikitext-103/vocab.txt --embed_type sgns --base_pair_type sexual_orientation --bias_score_path data/results/bias_scores/wikitext-103/so_sgns.pkl 
+python calc_bias_scores.py --embed_folder data/embed/wikitext-103/glove --vocab_path data/embed/wikitext-103/vocab.txt --embed_type glove --base_pair_type sexual_orientation --bias_score_path data/results/bias_scores/wikitext-103/so_glove.pkl
+python calc_bias_scores.py --embed_folder data/embed/reddit/askscience/sgns --vocab_path data/embed/reddit/askscience/vocab.txt --embed_type sgns --base_pair_type sexual_orientation --bias_score_path data/results/bias_scores/reddit/askscience/so_sgns.pkl
+python calc_bias_scores.py --embed_folder data/embed/reddit/askscience/glove --vocab_path data/embed/reddit/askscience/vocab.txt --embed_type glove --base_pair_type sexual_orientation --bias_score_path data/results/bias_scores/reddit/askscience/so_glove.pkl
+python calc_bias_scores.py --embed_folder data/embed/reddit/askhistorians/sgns --vocab_path data/embed/reddit/askhistorians/vocab.txt --embed_type sgns --base_pair_type sexual_orientation --bias_score_path data/results/bias_scores/reddit/askhistorians/so_sgns.pkl
+python calc_bias_scores.py --embed_folder data/embed/reddit/askhistorians/glove --vocab_path data/embed/reddit/askhistorians/vocab.txt --embed_type glove --base_pair_type sexual_orientation --bias_score_path data/results/bias_scores/reddit/askhistorians/so_glove.pkl
 ```
 
 **Estimate Reliability and Run Experiments** 
@@ -91,7 +102,7 @@ If you find this repository useful, please consider citing our paper
 }
 ```
 
-**Contact** 
+**Contact original authors** 
 
 If you have questions/issues, 
 either open an issue or contact Yupei Du (y.du@uu.nl) directly. 

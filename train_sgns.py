@@ -5,15 +5,15 @@ from loguru import logger
 from paths import corpus_path_dict, embed_folders
 
 
-def train_w2v(filename, size=300, workers=48, window=5, min_count=5, num_iter=5):
-    return Word2Vec(corpus_file=filename, size=size, workers=workers,
-                    window=window, min_count=min_count, iter=num_iter)
+def train_w2v(filename, size=300, workers=12, window=5, min_count=5, num_iter=5):
+    return Word2Vec(corpus_file=filename, vector_size=size, workers=workers,
+                    window=window, min_count=min_count, epochs=num_iter)
 
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--num_dim", type=int, default=300)
-    parser.add_argument("--num_threads", type=int, default=48)
+    parser.add_argument("--num_threads", type=int, default=12)
     parser.add_argument("--window_size", type=int, default=5)
     parser.add_argument("--min_count", type=int, default=5)
     parser.add_argument("--num_copies", type=int, default=32)

@@ -1,7 +1,10 @@
 import os
 import statistics
 import sys
-sys.path.append('../')
+print(os.getcwd())
+# sys.path.append('../')
+
+print(os.getcwd())
 
 import pandas as pd
 import numpy as np
@@ -13,11 +16,14 @@ from loguru import logger
 import tqdm
 
 import utils
+
 from bias_measure import k_nearest_words
+# os.chdir("../")
+
 import paths
 import data_loader as dl
 
-CORPORA = ['wikitext', 'reddit_ask_science', 'reddit_ask_historians']
+CORPORA = ['reddit_ask_science']
 
 
 # embed properties
@@ -87,20 +93,24 @@ def get_average_alignment_similarity(embed_models, words):
 
 
 def main():
-    os.chdir('../../')
+    os.chdir('../')
+    print(os.getcwd())
     os.makedirs(paths.property_dir, exist_ok=True)
     for corpus in CORPORA:
         vocab_path, sgns_embed_paths, glove_embed_paths = dl.get_embed_paths_from_folder(paths.embed_folders[corpus])
         vocab = dl.load_vocab(vocab_path)
+        print(f'\n\nvocab length: {len(vocab)}\n\n')
         # remove artificial unknown tokens
         vocab.discard('<unk>')
         vocab.discard('<raw_unk>')
+        print(f'\n\nvocab length: {len(vocab)}\n\n')
 
         # word properties
         logger.info('processing word properties')
         most_common_pos_dict = get_most_common_pos(vocab)
         n_senses_dict = get_num_of_senses(vocab)
         vocab = set(most_common_pos_dict) & set(n_senses_dict)
+        print(f'\n\nvocab length: {len(vocab)}\n\n')
 
         # embedding properties
         logger.info('processing embedding properties: ES, NN Sim and L2 Norm.')
@@ -109,6 +119,7 @@ def main():
         sgns_l2_norm_dict = []
         sgns_embed_models = []
         logger.info('processing SGNS')
+        print(sgns_embed_paths)
         for embed_path in tqdm.tqdm(sgns_embed_paths):
             embed_model = dl.load_gensim_sgns(embed_path)
             sgns_nn_sims_dict.append(get_nn_sim(vocab, embed_model))
@@ -124,6 +135,7 @@ def main():
         glove_embed_models = []
         for embed_path in tqdm.tqdm(glove_embed_paths):
             embed_model = dl.load_glove(embed_path, vocab_path=vocab_path)
+            glove_embed_models.append(embed_model) # line they forgot >:(
             glove_nn_sims_dict.append(get_nn_sim(vocab, embed_model))
             glove_l2_norm_dict.append(get_l2_norm(vocab, embed_model))
         glove_nn_sims_dict = average_multiple_embed(glove_nn_sims_dict)
@@ -140,16 +152,16 @@ def main():
         words_with_properties = vocab & set(sgns_embed_stability)
         logger.info(f'valid words: {len(words_with_properties)}')
         property_dict = {
-            'sgns_nn_sim': {word: sgns_nn_sims_dict[word] for word in words_with_properties},
-            'glove_nn_sim': {word: glove_nn_sims_dict[word] for word in words_with_properties},
-            'sgns_l2_norm': {word: sgns_l2_norm_dict[word] for word in words_with_properties},
             'glove_l2_norm': {word: glove_l2_norm_dict[word] for word in words_with_properties},
+            'glove_nn_sim': {word: glove_nn_sims_dict[word] for word in words_with_properties},
+            'glove_es': {word: glove_embed_stability[word] for word in words_with_properties},
+            'sgns_nn_sim': {word: sgns_nn_sims_dict[word] for word in words_with_properties},
+            'sgns_l2_norm': {word: sgns_l2_norm_dict[word] for word in words_with_properties},
             'frequency': {word: frequency_dict[word] for word in words_with_properties},
             'most_common_pos': {word: most_common_pos_dict[word] for word in words_with_properties},
             'n_senses': {word: n_senses_dict[word] for word in words_with_properties},
             'sgns_es': {word: sgns_embed_stability[word] for word in words_with_properties},
-            'glove_es': {word: glove_embed_stability[word] for word in words_with_properties},
-        }
+                    }
         property_df = pd.DataFrame(property_dict)
         property_csv_path = os.path.join(paths.property_dir, f'{corpus}.csv')
         property_df.to_csv(property_csv_path)

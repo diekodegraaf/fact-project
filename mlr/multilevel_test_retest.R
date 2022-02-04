@@ -32,14 +32,12 @@ continous_vars = c('log_frequency',
                    'log_n_senses',
                    'nn_sim',
                    'l2_norm',
-                   'dispersion_ave',
                    'es')
 
 # mutate the data
 data_centered = data %>%
   mutate(nn_sim = if_else(model == 'glove', glove_nn_sim, sgns_nn_sim),
          l2_norm = if_else(model == 'glove', glove_l2_norm, sgns_l2_norm),
-         dispersion_ave = (sgns_dispersion+glove_dispersion)/2,
          es = if_else(model == 'glove', glove_es, sgns_es),
          log_frequency = log(frequency),
          log_n_senses = log(n_senses)) %>%
@@ -51,7 +49,6 @@ data_centered = data %>%
 data_std = data %>%
   mutate(nn_sim = if_else(model == 'glove', glove_nn_sim, sgns_nn_sim),
          l2_norm = if_else(model == 'glove', glove_l2_norm, sgns_l2_norm),
-         dispersion_ave = (sgns_dispersion+glove_dispersion)/2,
          es = if_else(model == 'glove', glove_es, sgns_es),
          log_frequency = log(frequency),
          log_n_senses = log(n_senses)) %>%
@@ -79,7 +76,7 @@ ICC
 
 # check multicollinearity (pearson's R) (result similar to spearman)
 cor(select(data_std, log_frequency, log_frequency_squared,
-           log_n_senses, nn_sim, l2_norm, dispersion_ave, es, score), method = "pearson", use = "complete.obs")
+           log_n_senses, nn_sim, l2_norm, es, score), method = "pearson", use = "complete.obs")
 # log_frequency with l2_norm, ~.75
 # log_frequency with dispersion_ave, ~.90
 # we should probably just leave out dispersion_ave
@@ -131,13 +128,13 @@ data_std %>%
   geom_smooth(method='lm')
 
 # scatter plot: dispersion_ave vs. score - relationship seems very mixed across groups
-set.seed(123)
-data_std %>%
-  sample_frac(0.2) %>%
-  ggplot(aes(x = dispersion_ave, y = score)) +
-  geom_point() +
-  facet_wrap(~model*corpus) +
-  geom_smooth(method='lm')
+# set.seed(123)
+# data_std %>%
+#   sample_frac(0.2) %>%
+#   ggplot(aes(x = dispersion_ave, y = score)) +
+#   geom_point() +
+#   facet_wrap(~model*corpus) +
+#   geom_smooth(method='lm')
 
 # scatter plot: es vs. score - relationship seems overall positive across groups
 set.seed(123)

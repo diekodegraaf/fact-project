@@ -26,6 +26,7 @@ embed_folders = {
 
 # lexicon paths
 word_list_dir = os.path.join(data_dir, 'word_lists/')
+custom_sbp_path = os.path.join(word_list_dir, 'sexualorientation_base_pairs.json')
 nips_16_gbp_path = os.path.join(word_list_dir, 'gender_base_pairs.json')
 pnas_18_gbp_path = os.path.join(word_list_dir, 'rnd_gender_base_pairs.json')
 weat_lexicon_path = os.path.join(word_list_dir, 'weat_words.py')
@@ -36,6 +37,7 @@ google_10k_most_frequent_list_path = os.path.join(word_list_dir, 'google-10000-e
 
 # results paths
 results_dir = 'data/results/'
+results_paths = []
 
 # bias scores
 bias_scores_dir = os.path.join(results_dir, 'bias_scores/')
@@ -44,6 +46,7 @@ bias_scores_folders = {
     'reddit_ask_science': os.path.join(bias_scores_dir, 'reddit/askscience/'),
     'reddit_ask_historians': os.path.join(bias_scores_dir, 'reddit/askhistorians/')
 }
+results_paths.extend([bias_scores_dir] + list(bias_scores_folders.values()))
 
 # word embedding stability
 embed_stability_dir = os.path.join(results_dir, 'embed_stability/')
@@ -54,6 +57,7 @@ reliability_dict_dirs = {
     'reddit_ask_science': os.path.join(reliability_dir, 'reddit/askscience'),
     'reddit_ask_historians': os.path.join(reliability_dir, 'reddit/askhistorians')
 }
+results_paths.extend([embed_stability_dir, reliability_dir] + list(reliability_dict_dirs.values()))
 
 # properties
 property_dir = os.path.join(results_dir, 'property/')
@@ -71,3 +75,13 @@ gbps_inter_rater_image_dir = os.path.join(inter_rater_image_dir, 'gbp/')
 target_words_inter_rater_image_dir = os.path.join(inter_rater_image_dir, 'target_word/')
 
 internal_image_dir = os.path.join(reliability_images_dir, 'internal/')
+
+results_paths.extend([property_dir, images_dir, reliability_dir, reliability_images_dir,
+                      test_retest_image_dir, gbps_test_retest_image_dir, target_words_test_retest_image_dir,
+                      inter_rater_image_dir, gbps_inter_rater_image_dir, target_words_inter_rater_image_dir,
+                      internal_image_dir])
+
+for p in results_paths:
+    if not os.path.exists(p):
+        print('Created directory', p)
+        os.makedirs(p)
